@@ -68,7 +68,7 @@
                 label="COM_CONTACTUS_CATEGORIES_FIELD_AUTOREPLY"
                 description="COM_CONTACTUS_CATEGORIES_FIELD_AUTOREPLY_DESC"
                 showon="sendautoreply:1"
-                filter="JComponentHelper::filterText"
+                filter="\Joomla\CMS\Component\ComponentHelper::filterText"
         />
 
         <field

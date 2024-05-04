@@ -1,4 +1,8 @@
 <?php die() ?>
+ContactUs 4.2.2
+================================================================================
+# [LOW] Unintended dependency to Joomla's compatibility plugin due to XML form filtering
+
 ContactUs 4.2.1
 ================================================================================
 # [LOW] PHP 8.3 deprecated notice in ComponentParameters service (no functional issue)

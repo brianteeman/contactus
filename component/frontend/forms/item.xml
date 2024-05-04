@@ -48,7 +48,7 @@
                 type="editor"
                 label="COM_CONTACTUS_ITEMS_FIELD_BODY"
                 required="true"
-                filter="JComponentHelper::filterText"
+                filter="\Joomla\CMS\Component\ComponentHelper::filterText"
         />
 
     </fieldset>
