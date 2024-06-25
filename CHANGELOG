@@ -1,4 +1,8 @@
 <?php die() ?>
+ContactUs 4.2.3
+================================================================================
+~ Support for Joomla! 5.1's createQuery method in the db object
+
 ContactUs 4.2.2
 ================================================================================
 # [LOW] Unintended dependency to Joomla's compatibility plugin due to XML form filtering

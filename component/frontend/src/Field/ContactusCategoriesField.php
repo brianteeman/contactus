@@ -24,7 +24,7 @@ class ContactusCategoriesField extends ListField
 	{
 		/** @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get(DatabaseInterface::class);
-		$query = $db->getQuery(true)
+		$query = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 			->select([
 				$db->qn('contactus_category_id'),
 				$db->qn('title'),

@@ -64,7 +64,7 @@ class ItemsModel extends ListModel
 	protected function getListQuery()
 	{
 		$db    = $this->getDbo();
-		$query = $db->getQuery(true)
+		$query = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 			->select('*')
 			->from($db->qn('#__contactus_items'));
 

@@ -108,7 +108,7 @@ class ItemModel extends AdminItemModel
 
 			// Load the category
 			$db       = Factory::getDbo();
-			$query    = $db->getQuery(true)
+			$query    = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 				->select('*')
 				->from($db->quoteName('#__contactus_categories'))
 				->where($db->quoteName('contactus_category_id') . ' = :catid')

@@ -125,7 +125,7 @@ class ContactUs
 		}
 
 		$db    = $this->dbo;
-		$query = $db->getQuery(true)
+		$query = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 			->select([
 				$db->quoteName('contactus_category_id'),
 				$db->quoteName('title'),
