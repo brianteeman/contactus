@@ -12,7 +12,7 @@
 	Run "phing" from the build directory to build the component and plugins
 -->
 <project name="ContactUsDemoComponent" description="ContactUs F0F Demo Component" default="all" >
-	<import file="${phing.dir}/../../buildfiles/phing/common.xml" />
+	<import file="${phing.dir}/../buildfiles/phing/common.xml" />
 
 	<!--
 	====================================================================================================
@@ -44,19 +44,4 @@
 		<include name="*.txt" />
 		<include name="script.contactus.php" />
 	</fileset>
-
-
-	<!--
-	====================================================================================================
-	Tasks - General
-	====================================================================================================
-	-->
-
-	<target name="all" description="Makes everything"
-			depends="git,lang">
-	</target>
-
-	<target name="documentation" description="Documentation (does not exist)">
-		<echo>No documentation exists for this package</echo>
-	</target>
 </project>
