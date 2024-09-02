@@ -9,6 +9,7 @@ namespace Akeeba\Component\ContactUs\Site\View\Item;
 
 \defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -40,6 +41,13 @@ class HtmlView extends BaseHtmlView
 
 	public function display($tpl = null)
 	{
+		$cParams = ComponentHelper::getParams('com_contactus');
+
+		if ($cParams->get('offline', 0))
+		{
+			$this->setLayout('offline');
+		}
+
 		$app  = Factory::getApplication();
 		$user = $app->getIdentity() ?: Factory::getUser();
 
@@ -60,7 +68,7 @@ class HtmlView extends BaseHtmlView
 		$params = &$this->state->params;
 
 		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx') ?? '');
 		$this->params        = $params;
 		$this->user          = $user;
 

@@ -1,6 +1,7 @@
 <?php die() ?>
 ContactUs 4.2.3
 ================================================================================
++ Add off-line mode
 ~ Support for Joomla! 5.1's createQuery method in the db object
 
 ContactUs 4.2.2

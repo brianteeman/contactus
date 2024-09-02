@@ -13,6 +13,7 @@ use Akeeba\Component\ContactUs\Administrator\Mixin\RunPluginsTrait;
 use Exception;
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Application\SiteApplication;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormFactoryAwareTrait;
 use Joomla\CMS\Form\FormFactoryInterface;
@@ -53,6 +54,16 @@ class ItemController extends BaseController
 	public function save()
 	{
 		$this->checkToken();
+
+		$cParams = ComponentHelper::getParams('com_contactus');
+
+		if ($cParams->get('offline', 0))
+		{
+			$this->setMessage(Text::_('COM_CONTACTUS_ITEM_ERR_OFFLINE'), 'warning');
+			$this->setRedirect(Route::_('index.php?option=com_contactus&view=Item.add', false));
+
+			return true;
+		}
 
 		/** @var SiteApplication $app */
 		$app = Factory::getApplication();
