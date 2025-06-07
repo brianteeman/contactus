@@ -11,6 +11,7 @@ defined('_JEXEC') || die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\User\UserFactoryInterface;
 
 #[\AllowDynamicProperties]
 class ItemModel extends AdminModel
@@ -37,7 +38,7 @@ class ItemModel extends AdminModel
 
 		if (empty($data))
 		{
-			$data = (object) $this->getItem()->getProperties();
+			$data = (object) $this->getItem();
 		}
 
 		$this->preprocessData('com_contactus.item', $data);
@@ -48,7 +49,7 @@ class ItemModel extends AdminModel
 	protected function prepareTable($table)
 	{
 		$date = Factory::getDate();
-		$user = Factory::getApplication()->getIdentity() ?: Factory::getUser();
+		$user = Factory::getApplication()->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
 
 		if (empty($table->getId()))
 		{

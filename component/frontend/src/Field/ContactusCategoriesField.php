@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\ListField;
 use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
@@ -32,7 +33,7 @@ class ContactusCategoriesField extends ListField
 			->where($db->quoteName('enabled') . ' = 1');
 
 		// Access filtering
-		$user       = Factory::getApplication()->getIdentity() ?: Factory::getUser();
+		$user       = Factory::getApplication()->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
 		$viewLevels = $user->getAuthorisedViewLevels();
 		$query->whereIn($db->quoteName('access'), $viewLevels);
 

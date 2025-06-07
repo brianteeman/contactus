@@ -74,7 +74,7 @@ class CategoriesModel extends ListModel
 
 	protected function getListQuery()
 	{
-		$db    = $this->getDbo();
+		$db    = $this->getDatabase();
 		$query = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 			->select([
 				$db->quoteName('c') . '.*',
@@ -154,8 +154,8 @@ class CategoriesModel extends ListModel
 		}
 
 		// List ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'contactus_category_id');
-		$orderDirn = $this->state->get('list.direction', 'ASC');
+		$orderCol  = $this->getState('list.ordering', 'contactus_category_id');
+		$orderDirn = $this->getState('list.direction', 'ASC');
 		$ordering  = $db->escape($orderCol) . ' ' . $db->escape($orderDirn);
 
 		$query->order($ordering);

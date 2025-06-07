@@ -18,6 +18,7 @@ use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Table\Table;
 use RuntimeException;
 use stdClass;
@@ -53,7 +54,7 @@ class ItemModel extends AdminItemModel
 
 		if (empty($data))
 		{
-			$data = (object) $this->getItem()->getProperties();
+			$data = (object) $this->getItem();
 		}
 
 		$this->preprocessData('com_contactus.item', $data);
@@ -100,14 +101,14 @@ class ItemModel extends AdminItemModel
 		{
 			// Update the table object with the saved data
 			$table->bind($data);
-			$table->set($table->getKeyName(), $this->getState($this->getName() . '.id'));
+			$table->{$table->getKeyName()} = $this->getState($this->getName() . '.id');
 
 			$apiKey = ComponentHelper::getParams('com_contactus')->get('akismet_api_key', '');
 			$isSpam = Akismet::isSpamContent($apiKey, $table->fromname, $table->fromemail, $table->body);
 			$this->setState('isSpam', $isSpam);
 
 			// Load the category
-			$db       = Factory::getDbo();
+			$db       = $this->getDatabase();
 			$query    = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 				->select('*')
 				->from($db->quoteName('#__contactus_categories'))
@@ -152,7 +153,8 @@ class ItemModel extends AdminItemModel
 
 	private function sendEmailToAdministrators($table, $category)
 	{
-		$mailer = Factory::getMailer();
+		/** @noinspection PhpDeprecationInspection */
+		$mailer = clone (class_exists(MailerFactoryInterface::class) ? Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer() : Factory::getMailer());
 		$app    = Factory::getApplication();
 
 		$mailer->setFrom($app->get('mailfrom'), $app->get('fromname'));
@@ -202,7 +204,8 @@ class ItemModel extends AdminItemModel
 		$autoReply = $category->autoreply;
 		$autoReply = $this->preProcessAutoreply($autoReply, $table, $category);
 
-		$mailer = Factory::getMailer();
+		/** @noinspection PhpDeprecationInspection */
+		$mailer = clone (class_exists(MailerFactoryInterface::class) ? Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer() : Factory::getMailer());
 		$app    = Factory::getApplication();
 
 		$mailer->setFrom($app->get('mailfrom'), $app->get('fromname'));
@@ -239,7 +242,7 @@ class ItemModel extends AdminItemModel
 			'[CATEGORY]' => $category->title,
 		];
 
-		$rawData = $table->getProperties();
+		$rawData = (array) $table;
 
 		foreach ($rawData as $key => $value)
 		{

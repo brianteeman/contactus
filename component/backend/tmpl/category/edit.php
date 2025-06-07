@@ -13,7 +13,7 @@ use Joomla\CMS\Router\Route;
 
 /** @var \Akeeba\Component\ContactUs\Administrator\View\Category\HtmlView $this */
 
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa->useScript('keepalive')
 	->useScript('form.validate');
 

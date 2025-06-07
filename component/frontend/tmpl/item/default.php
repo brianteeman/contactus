@@ -23,7 +23,7 @@ setInterval(
 JS;
 
 
-$wa = $this->document->getWebAssetManager();
+$wa = $this->getDocument()->getWebAssetManager();
 $wa
 	->addInlineScript($keepalive)
 	->useScript('form.validate');

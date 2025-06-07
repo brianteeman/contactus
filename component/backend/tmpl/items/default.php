@@ -12,6 +12,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\User\UserFactoryInterface;
+use Joomla\Database\DatabaseInterface;
 
 /** @var \Akeeba\Component\ContactUs\Administrator\View\Items\HtmlView $this */
 
@@ -22,11 +24,11 @@ if (version_compare(JVERSION, '4.999.999', 'lt'))
 
 HTMLHelper::_('behavior.multiselect');
 
-$user      = Factory::getApplication()->getIdentity() ?: Factory::getUser();
-$userId    = $user->get('id');
+$user      = Factory::getApplication()->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
+$userId    = $user->id;
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
-$nullDate  = Factory::getDbo()->getNullDate();
+$nullDate  = Factory::getContainer()->get(DatabaseInterface::class)->getNullDate();
 
 $i = 0;
 ?>

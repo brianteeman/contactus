@@ -8,13 +8,14 @@
 namespace Akeeba\Component\ContactUs\Administrator\Mixin;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\User\UserFactoryInterface;
 
 trait TableCreateModifyTrait
 {
 	public function onBeforeStore()
 	{
 		$date = Factory::getDate()->toSql();
-		$user = Factory::getApplication()->getIdentity() ?: Factory::getUser();
+		$user = Factory::getApplication()->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
 
 		// Set created date if not set.
 		if ($this->hasField('created_on') && !(int) $this->created_on)

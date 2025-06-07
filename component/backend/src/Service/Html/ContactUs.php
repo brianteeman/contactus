@@ -14,6 +14,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Database\DatabaseDriver;
 
 class ContactUs
@@ -55,7 +56,7 @@ class ContactUs
 			try
 			{
 				$tzDefault = Factory::getApplication()->get('offset', 'GMT');
-				$user      = Factory::getApplication()->getIdentity() ?: Factory::getUser();
+				$user      = Factory::getApplication()->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
 				$tz        = $user->getParam('timezone', $tzDefault);
 			}
 			catch (Exception $e)

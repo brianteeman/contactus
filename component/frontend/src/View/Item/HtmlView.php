@@ -15,6 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\User\UserFactoryInterface;
 
 /**
  * HTML Article View class for the Content component
@@ -49,7 +50,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		$app  = Factory::getApplication();
-		$user = $app->getIdentity() ?: Factory::getUser();
+		$user = $app->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
 
 		// Get model data.
 		$this->state       = $this->get('State');
@@ -117,12 +118,12 @@ class HtmlView extends BaseHtmlView
 
 		if ($this->params->get('menu-meta_description'))
 		{
-			$this->document->setDescription($this->params->get('menu-meta_description'));
+			$this->getDocument()->setDescription($this->params->get('menu-meta_description'));
 		}
 
 		if ($this->params->get('robots'))
 		{
-			$this->document->setMetaData('robots', $this->params->get('robots'));
+			$this->getDocument()->setMetaData('robots', $this->params->get('robots'));
 		}
 	}
 

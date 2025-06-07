@@ -10,9 +10,8 @@ namespace Akeeba\Component\ContactUs\Administrator\Model;
 defined('_JEXEC') || die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\Form;
 use Joomla\CMS\MVC\Model\AdminModel;
-use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\User\UserFactoryInterface;
 
 #[\AllowDynamicProperties]
 class CategoryModel extends AdminModel
@@ -36,7 +35,7 @@ class CategoryModel extends AdminModel
 
 		if (empty($data))
 		{
-			$data = (object) $this->getItem()->getProperties();
+			$data = (object) $this->getItem();
 		}
 
 		$this->preprocessData('com_contactus.category', $data);
@@ -47,7 +46,7 @@ class CategoryModel extends AdminModel
 	protected function prepareTable($table)
 	{
 		$date = Factory::getDate();
-		$user = Factory::getApplication()->getIdentity() ?: Factory::getUser();
+		$user = Factory::getApplication()->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
 
 		if (empty($table->getId()))
 		{
@@ -67,12 +66,12 @@ class CategoryModel extends AdminModel
 	{
 		parent::preprocessData($context, $data, $group);
 
-		if (!is_object($data) || !$data->email instanceof CMSObject)
+		if (!is_object($data))
 		{
 			return;
 		}
 
-		$data->email = $data->email->getProperties();
+		$data->email = (array) $data->email;
 	}
 
 

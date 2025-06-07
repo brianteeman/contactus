@@ -63,7 +63,7 @@ class ItemsModel extends ListModel
 
 	protected function getListQuery()
 	{
-		$db    = $this->getDbo();
+		$db    = $this->getDatabase();
 		$query = (method_exists($db, 'createQuery') ? $db->createQuery() : $db->getQuery(true))
 			->select('*')
 			->from($db->qn('#__contactus_items'));
@@ -124,8 +124,8 @@ class ItemsModel extends ListModel
 		}
 
 		// List ordering clause
-		$orderCol  = $this->state->get('list.ordering', 'created_on');
-		$orderDirn = $this->state->get('list.direction', 'DESC');
+		$orderCol  = $this->getState('list.ordering', 'created_on');
+		$orderDirn = $this->getState('list.direction', 'DESC');
 		$ordering  = $db->escape($orderCol) . ' ' . $db->escape($orderDirn);
 
 		$query->order($ordering);

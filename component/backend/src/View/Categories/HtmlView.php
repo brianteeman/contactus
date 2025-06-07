@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Akeeba\Component\ContactUs\Administrator\Mixin\ViewLoadAnyTemplateTrait;
 use Akeeba\Component\ContactUs\Administrator\Mixin\ViewTaskBasedEventsTrait;
+use Akeeba\Component\ContactUs\Administrator\Mixin\ViewToolbarTrait;
 use Akeeba\Component\ContactUs\Administrator\Model\CategoriesModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
@@ -21,12 +22,14 @@ use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\User\UserFactoryInterface;
 use Joomla\Registry\Registry;
 
 class HtmlView extends BaseHtmlView
 {
 	use ViewLoadAnyTemplateTrait;
 	use ViewTaskBasedEventsTrait;
+	use ViewToolbarTrait;
 
 	/**
 	 * The search tools form
@@ -91,10 +94,10 @@ class HtmlView extends BaseHtmlView
 
 	protected function addToolbar(): void
 	{
-		$user = Factory::getApplication()->getIdentity() ?: Factory::getUser();
+		$user = Factory::getApplication()->getIdentity() ?: Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById(0);
 
 		// Get the toolbar object instance
-		$toolbar = Toolbar::getInstance('toolbar');
+		$toolbar = $this->getToolbarCompat();
 
 		ToolbarHelper::title(sprintf(Text::_('COM_CONTACTUS_TITLE_CATEGORIES')), 'fa fa-list-alt');
 
