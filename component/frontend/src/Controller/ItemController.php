@@ -9,6 +9,7 @@ namespace Akeeba\Component\ContactUs\Site\Controller;
 
 defined('_JEXEC') || die;
 
+use Akeeba\Component\ContactUs\Administrator\Mixin\CMSObjectWorkaroundTrait;
 use Akeeba\Component\ContactUs\Administrator\Mixin\RunPluginsTrait;
 use Exception;
 use Joomla\CMS\Application\CMSApplication;
@@ -28,12 +29,16 @@ class ItemController extends BaseController
 {
 	use FormFactoryAwareTrait;
 	use RunPluginsTrait;
+	use CMSObjectWorkaroundTrait;
 
 	protected $context = 'item';
 
 	protected $option = 'com_contactus';
 
-	public function __construct($config = [], MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null, FormFactoryInterface $formFactory = null)
+	public function __construct(
+		$config = [], MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null,
+		FormFactoryInterface $formFactory = null
+	)
 	{
 		parent::__construct($config, $factory, $app, $input);
 
@@ -73,11 +78,11 @@ class ItemController extends BaseController
 		$model   = $this->getModel();
 		$data    = $this->input->post->get('jform', [], 'array');
 		$context = "$this->option.edit.$this->context";
-		$form    = $model->getForm($data, false);
+		[$form, $error,] = $this->cmsObjectSafeCall($model, 'getForm', $data, false);
 
 		if (!$form)
 		{
-			$app->enqueueMessage($model->getError(), 'error');
+			$app->enqueueMessage($error, 'error');
 
 			return false;
 		}
@@ -91,14 +96,12 @@ class ItemController extends BaseController
 		$data = (array) $objData;
 
 		// Test whether the data is valid.
-		$validData = $model->validate($form, $data);
+		[$validData, $error, $errors] = $this->cmsObjectSafeCall($model, 'validate', $form, $data);
 
 		// Check for validation errors.
 		if ($validData === false)
 		{
 			// Push up to three validation messages out to the user.
-			$errors = $model->getErrors();
-
 			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++)
 			{
 				if ($errors[$i] instanceof Exception)
@@ -139,11 +142,13 @@ class ItemController extends BaseController
 		}
 
 		// Attempt to save the data.
-		if (!$model->save($validData))
+		[$isSaved, $error,] = $this->cmsObjectSafeCall($model, 'save', $validData);
+
+		if (!$isSaved)
 		{
 			$app->setUserState('com_contactus.edit.item.data', $validData);
 
-			$this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()), 'error');
+			$this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $error), 'error');
 			$this->setRedirect(Route::_('index.php?option=com_contactus&view=Item.add', false));
 
 			return false;
@@ -151,7 +156,8 @@ class ItemController extends BaseController
 
 		$app->setUserState('com_contactus.edit.item.data', null);
 
-		$url = 'index.php?option=com_contactus&view=thanks' . ($model->getState('isSpam', false) ? '&layout=spammer' : '');
+		$url = 'index.php?option=com_contactus&view=thanks' . ($model->getState('isSpam', false) ? '&layout=spammer'
+				: '');
 
 		$this->setRedirect(Route::_($url, false));
 

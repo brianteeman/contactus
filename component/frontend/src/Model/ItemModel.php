@@ -9,6 +9,7 @@ namespace Akeeba\Component\ContactUs\Site\Model;
 
 defined('_JEXEC') or die;
 
+use Akeeba\Component\ContactUs\Administrator\Mixin\CMSObjectWorkaroundTrait;
 use Akeeba\Component\ContactUs\Administrator\Model\ItemModel as AdminItemModel;
 use Akeeba\Component\ContactUs\Administrator\Table\ItemTable;
 use Akeeba\Component\ContactUs\Site\Helper\Akismet;
@@ -25,6 +26,8 @@ use stdClass;
 
 class ItemModel extends AdminItemModel
 {
+	use CMSObjectWorkaroundTrait;
+
 	public function getCaptchaObject($namespace = 'contactus')
 	{
 		try
@@ -89,7 +92,7 @@ class ItemModel extends AdminItemModel
 		}
 		catch (Exception $e)
 		{
-			$this->setError($e);
+			$this->setErrorOrThrow($e->getMessage());
 
 			return false;
 		}

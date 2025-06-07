@@ -9,6 +9,7 @@ namespace Akeeba\Component\ContactUs\Administrator\Table;
 
 defined('_JEXEC') or die;
 
+use Akeeba\Component\ContactUs\Administrator\Mixin\CMSObjectWorkaroundTrait;
 use Akeeba\Component\ContactUs\Administrator\Mixin\GetPropertiesAwareTrait;
 use Akeeba\Component\ContactUs\Administrator\Mixin\TableCreateModifyTrait;
 use Joomla\CMS\Factory;
@@ -40,6 +41,7 @@ class CategoryTable extends Table
 {
 	use TableCreateModifyTrait;
 	use GetPropertiesAwareTrait;
+	use CMSObjectWorkaroundTrait;
 
 	public function __construct(DatabaseDriver $db)
 	{
@@ -77,14 +79,14 @@ class CategoryTable extends Table
 		}
 		catch (\Exception $e)
 		{
-			$this->setError($e->getMessage());
+			$this->setErrorOrThrow($e->getMessage());
 
 			return false;
 		}
 
 		if (empty($this->title))
 		{
-			$this->setError(Text::_('COM_CONTACTUS_CATEGORY_ERR_TITLE_EMPTY'));
+			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_CATEGORY_ERR_TITLE_EMPTY'));
 
 			return false;
 		}

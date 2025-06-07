@@ -9,6 +9,7 @@ namespace Akeeba\Component\ContactUs\Administrator\Table;
 
 defined('_JEXEC') || die;
 
+use Akeeba\Component\ContactUs\Administrator\Mixin\CMSObjectWorkaroundTrait;
 use Akeeba\Component\ContactUs\Administrator\Mixin\GetPropertiesAwareTrait;
 use Akeeba\Component\ContactUs\Administrator\Mixin\TableCreateModifyTrait;
 use Joomla\CMS\Language\Text;
@@ -38,6 +39,7 @@ class ItemTable extends Table
 {
 	use TableCreateModifyTrait;
 	use GetPropertiesAwareTrait;
+	use CMSObjectWorkaroundTrait;
 
 	public function __construct(DatabaseDriver $db)
 	{
@@ -57,42 +59,42 @@ class ItemTable extends Table
 		}
 		catch (\Exception $e)
 		{
-			$this->setError($e->getMessage());
+			$this->setErrorOrThrow($e->getMessage());
 
 			return false;
 		}
 
 		if (empty($this->contactus_category_id))
 		{
-			$this->setError(Text::_('COM_CONTACTUS_ITEM_ERR_CATEGORY_EMPTY'));
+			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_CATEGORY_EMPTY'));
 
 			return false;
 		}
 
 		if (empty($this->fromname))
 		{
-			$this->setError(Text::_('COM_CONTACTUS_ITEM_ERR_FROMNAME_EMPTY'));
+			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_FROMNAME_EMPTY'));
 
 			return false;
 		}
 
 		if (empty($this->fromemail))
 		{
-			$this->setError(Text::_('COM_CONTACTUS_ITEM_ERR_FROMEMAIL_EMPTY'));
+			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_FROMEMAIL_EMPTY'));
 
 			return false;
 		}
 
 		if (empty($this->subject))
 		{
-			$this->setError(Text::_('COM_CONTACTUS_ITEM_ERR_SUBJECT_EMPTY'));
+			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_SUBJECT_EMPTY'));
 
 			return false;
 		}
 
 		if (empty($this->body))
 		{
-			$this->setError(Text::_('COM_CONTACTUS_ITEM_ERR_BODY_EMPTY'));
+			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_BODY_EMPTY'));
 
 			return false;
 		}
