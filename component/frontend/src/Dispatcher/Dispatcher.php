@@ -38,7 +38,7 @@ class Dispatcher extends ComponentDispatcher
 			}
 
 			$jLang = $this->app->getLanguage();
-			$jLang->load($this->option, JPATH_COMPONENT_ADMINISTRATOR, null, true, true);
+			$jLang->load($this->option, JPATH_ADMINISTRATOR . '/components/com_contacts', null, true, true);
 			$jLang->load($this->option, JPATH_ADMINISTRATOR, null, true, true);
 			$jLang->load($this->option, JPATH_SITE, null, true, true);
 
