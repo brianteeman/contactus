@@ -1,6 +1,7 @@
 <?php die() ?>
 ContactUs 4.2.4
 ================================================================================
++ PostgreSQL support (experimental)
 ~ Preliminary support for Joomla 6
 
 ContactUs 4.2.3
