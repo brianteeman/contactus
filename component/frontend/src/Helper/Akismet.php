@@ -9,8 +9,8 @@ namespace Akeeba\Component\ContactUs\Site\Helper;
 
 use Joomla\CMS\Environment\Browser;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Http\HttpFactory;
 use Joomla\Utilities\IpHelper;
 
 class Akismet
@@ -35,7 +35,7 @@ class Akismet
 		];
 
 		$apiUrl = "https://{$apiKey}.rest.akismet.com/1.1/";
-		$http   = HttpFactory::getHttp();
+		$http   = (new HttpFactory())->getHttp();
 		$uri    = new Uri($apiUrl . 'comment-check');
 
 		$response = $http->post($uri->toString(), $struct);
