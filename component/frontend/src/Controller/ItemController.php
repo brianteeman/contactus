@@ -51,7 +51,7 @@ class ItemController extends BaseController
 
 	public function add()
 	{
-		$this->app->input->set('contactus_item_id', null);
+		$this->app->getInput()->set('contactus_item_id', null);
 
 		return $this->display(false);
 	}

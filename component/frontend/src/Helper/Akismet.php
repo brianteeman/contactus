@@ -27,7 +27,7 @@ class Akismet
 			'blog'                 => Uri::base(),
 			'user_ip'              => IpHelper::getIp(),
 			'user_agent'           => Browser::getInstance()->getAgentString(),
-			'referrer'             => $app->input->server->get('HTTP_REFERER', '', 'raw'),
+			'referrer'             => $app->getInput()->server->get('HTTP_REFERER', '', 'raw'),
 			'comment_type'         => 'contact-form',
 			'comment_author'       => $name,
 			'comment_author_email' => $email,
