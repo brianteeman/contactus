@@ -19,11 +19,6 @@ use Joomla\Database\DatabaseInterface;
 
 /** @var \Akeeba\Component\ContactUs\Administrator\View\Categories\HtmlView $this */
 
-if (version_compare(JVERSION, '4.999.999', 'lt'))
-{
-	$this->loadAnyTemplate('Commontemplates/joomla_eol');
-}
-
 /**
  * HTMLHelper's `behavior.multiselect` is deprecated in Joomla 6.
  *
