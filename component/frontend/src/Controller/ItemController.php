@@ -36,7 +36,7 @@ class ItemController extends BaseController
 	protected $option = 'com_contactus';
 
 	public function __construct(
-		$config = [], MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null,
+		$config = [], ?MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null,
 		FormFactoryInterface $formFactory = null
 	)
 	{

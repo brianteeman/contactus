@@ -4,6 +4,7 @@ ContactUs 4.2.4
 + PostgreSQL support (experimental)
 ~ Preliminary support for Joomla 6
 ~ PHP 8.5 compatibility: setAccessible is deprecated for reflection objects
+~ PHP 8.5 compatibility: implicit nullable method parameters are deprecated
 
 ContactUs 4.2.3
 ================================================================================
