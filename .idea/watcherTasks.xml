@@ -16,7 +16,7 @@
       <option name="outputFromStdout" value="false" />
       <option name="program" value="$ProjectFileDir$/../buildfiles/node_modules/.bin/babel" />
       <option name="runOnExternalChanges" value="true" />
-      <option name="scopeName" value="Project Files" />
+      <option name="scopeName" value="ES5" />
       <option name="trackOnlyRoot" value="true" />
       <option name="workingDir" value="$FileDir$" />
       <envs>
