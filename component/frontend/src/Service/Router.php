@@ -17,7 +17,7 @@ use Joomla\CMS\Menu\AbstractMenu;
 
 class Router extends RouterView
 {
-	public function __construct(SiteApplication $app = null, AbstractMenu $menu = null)
+	public function __construct(?SiteApplication $app = null, ?AbstractMenu $menu = null)
 	{
 		$itemView = new RouterViewConfiguration('item');
 		//$itemView->setKey('task');
