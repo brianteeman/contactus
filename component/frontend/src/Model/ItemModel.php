@@ -249,6 +249,11 @@ class ItemModel extends AdminItemModel
 
 		foreach ($rawData as $key => $value)
 		{
+			if (str_starts_with($key, "\0"))
+			{
+				continue;
+			}
+
 			$replacements['[' . strtoupper($key) . ']'] = $value;
 		}
 

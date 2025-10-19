@@ -1,6 +1,7 @@
 <?php die() ?>
 ContactUs 4.2.5
 ================================================================================
+! Joomla 6: converting a table to an array includes non-scalar values causing a fatal error.
 ~ PHP 8.5 Compatibility
 
 ContactUs 4.2.4
