@@ -40,6 +40,6 @@ class Akismet
 
 		$response = $http->post($uri->toString(), $struct);
 
-		return $response->body == 'true';
+		return $response->getBody() == 'true';
 	}
 }

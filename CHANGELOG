@@ -1,4 +1,8 @@
 <?php die() ?>
+ContactUs 4.2.6
+================================================================================
+# [HIGH] The Akismet integration was broken on Joomla 6
+
 ContactUs 4.2.5
 ================================================================================
 ! Joomla 6: converting a table to an array includes non-scalar values causing a fatal error.
