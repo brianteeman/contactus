@@ -53,6 +53,18 @@
 		<languages folder="backend/language">
 			<language tag="en-GB">en-GB/com_contactus.ini</language>
 			<language tag="en-GB">en-GB/com_contactus.sys.ini</language>
+			<language tag="de-DE">de-DE/com_contactus.ini</language>
+			<language tag="de-DE">de-DE/com_contactus.sys.ini</language>
+			<language tag="el-GR">el-GR/com_contactus.ini</language>
+			<language tag="el-GR">el-GR/com_contactus.sys.ini</language>
+			<language tag="es-ES">es-ES/com_contactus.ini</language>
+			<language tag="es-ES">es-ES/com_contactus.sys.ini</language>
+			<language tag="fr-FR">fr-FR/com_contactus.ini</language>
+			<language tag="fr-FR">fr-FR/com_contactus.sys.ini</language>
+			<language tag="it-IT">it-IT/com_contactus.ini</language>
+			<language tag="it-IT">it-IT/com_contactus.sys.ini</language>
+			<language tag="pt-PT">pt-PT/com_contactus.ini</language>
+			<language tag="pt-PT">pt-PT/com_contactus.sys.ini</language>
 		</languages>
 
 	</administration>
@@ -60,6 +72,12 @@
 	<!-- Front end translation files -->
 	<languages folder="frontend/language">
 		<language tag="en-GB">en-GB/com_contactus.ini</language>
+		<language tag="de-DE">de-DE/com_contactus.ini</language>
+		<language tag="el-GR">el-GR/com_contactus.ini</language>
+		<language tag="es-ES">es-ES/com_contactus.ini</language>
+		<language tag="fr-FR">fr-FR/com_contactus.ini</language>
+		<language tag="it-IT">it-IT/com_contactus.ini</language>
+		<language tag="pt-PT">pt-PT/com_contactus.ini</language>
 	</languages>
 
 	<!-- Media files -->
