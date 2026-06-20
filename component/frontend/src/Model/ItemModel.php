@@ -87,7 +87,7 @@ class ItemModel extends AdminItemModel
 
 			if (!is_null($captcha))
 			{
-				$this->assert($captcha->checkAnswer(Factory::getApplication()->input->get('captcha', '', 'raw')), 'COM_CONTACTUS_ITEM_ERR_CAPTCHA');
+				$this->assert($captcha->checkAnswer(Factory::getApplication()->getInput()->get('captcha', '', 'raw')), 'COM_CONTACTUS_ITEM_ERR_CAPTCHA');
 			}
 		}
 		catch (Exception $e)

@@ -69,7 +69,7 @@ class HtmlView extends BaseHtmlView
 
 	protected function addToolbar(): void
 	{
-		Factory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
 		ToolbarHelper::title(Text::_('COM_CONTACTUS_TITLE_ITEMS_EDIT'), 'fa fa-envelope');
 
