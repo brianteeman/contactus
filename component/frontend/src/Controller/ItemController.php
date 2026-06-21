@@ -37,7 +37,7 @@ class ItemController extends BaseController
 
 	public function __construct(
 		$config = [], ?MVCFactoryInterface $factory = null, ?CMSApplication $app = null, ?Input $input = null,
-		FormFactoryInterface $formFactory = null
+		?FormFactoryInterface $formFactory = null
 	)
 	{
 		parent::__construct($config, $factory, $app, $input);

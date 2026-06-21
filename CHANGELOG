@@ -1,4 +1,12 @@
 <?php die() ?>
+ContactUs 4.2.7
+================================================================================
+~ Joomla 7.0 compatibility: replace removed $app->input property access
+~ PHP 8.4 compatibility: implicit nullable method parameter in ItemController
+~ Moved from Babel to Terser for JavaScript minification
++ Machine translations for de-DE, el-GR, es-ES, fr-FR, it-IT, pt-PT
+# [LOW] Fixed British English spelling and grammar in en-GB language files
+
 ContactUs 4.2.6
 ================================================================================
 # [HIGH] The Akismet integration was broken on Joomla 6
