@@ -2,6 +2,7 @@
 ContactUs 4.3.0
 ================================================================================
 ~ Declare the core.options permission so it can be granted per user group
+~ Cache cleaning now targets the single cache folder that every Joomla 4+ application shares
 ! PHP and Joomla minimum and maximum version compatibility is now enforced
 - Removed legacy error handler
 # [LOW] The version compatibility error disclosed exact PHP and Joomla versions on public pages
