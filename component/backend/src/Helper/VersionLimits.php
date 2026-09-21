@@ -80,7 +80,7 @@ class VersionLimits
 
 		if (self::$incompatibleReason['php_min'])
 		{
-			throw new \RuntimeException(
+			self::failWithDetails(
 				sprintf(
 					'This version of %s requires PHP %s or later. Your server currently uses PHP version %s. Please upgrade your PHP version.',
 					$softwareName, self::$minPHPVersion, PHP_VERSION
@@ -90,7 +90,7 @@ class VersionLimits
 
 		if (self::$incompatibleReason['php_max'])
 		{
-			throw new \RuntimeException(
+			self::failWithDetails(
 				sprintf(
 					'This version of %s is only compatible with PHP versions lower than %s. Your server currently uses PHP version %s. Please upgrade %1$s.',
 					$softwareName, self::$maxPHPVersion, PHP_VERSION
@@ -100,7 +100,7 @@ class VersionLimits
 
 		if (self::$incompatibleReason['joomla_min'])
 		{
-			throw new \RuntimeException(
+			self::failWithDetails(
 				sprintf(
 					'This version of %s requires Joomla %s or later. You are currently using Joomla %s. Please upgrade Joomla.',
 					$softwareName, self::$minJoomlaVersion, JVERSION
@@ -110,7 +110,7 @@ class VersionLimits
 
 		if (self::$incompatibleReason['joomla_max'])
 		{
-			throw new \RuntimeException(
+			self::failWithDetails(
 				sprintf(
 					'This version of %s is only compatible with Joomla versions lower than %s. You are currently using Joomla %s. Please upgrade or downgrade %1$s.',
 					$softwareName, self::$maxJoomlaVersion, JVERSION
@@ -177,5 +177,51 @@ class VersionLimits
 		}
 
 		return rtrim($ret) . ' ' . (constant(self::$proCoreConstant) ? 'Professional' : 'Core');
+	}
+
+	/**
+	 * Throw the version incompatibility error, without disclosing versions to the public.
+	 *
+	 * The detailed message names the exact PHP and Joomla versions in use. That is the right thing to tell an
+	 * administrator and the wrong thing to tell the world: Joomla's error page prints an uncaught exception's message
+	 * regardless of the debug setting, so on a public request the detail would hand an anonymous visitor a precise
+	 * version fingerprint to match against published CVEs.
+	 *
+	 * Therefore: the detail is shown to every client EXCEPT the public site. An administrator sees the full message in
+	 * the backend, which is where they can act on it.
+	 *
+	 * @param   string  $detailedMessage  The message naming the exact versions involved.
+	 *
+	 * @return  void
+	 * @throws  \RuntimeException  Always.
+	 */
+	private static function failWithDetails(string $detailedMessage): void
+	{
+		throw new \RuntimeException(
+			self::mayDiscloseVersions() ? $detailedMessage : sprintf(
+				'%s cannot run in this environment. Please contact the administrator of this site.',
+				self::$softwareName
+			)
+		);
+	}
+
+	/**
+	 * Is it safe to disclose the exact PHP and Joomla versions to whoever is making this request?
+	 *
+	 * Safe everywhere except the public site. If the application cannot be determined at all we assume it is not safe,
+	 * since withholding detail from an administrator is a nuisance whereas leaking it to the public is a disclosure.
+	 *
+	 * @return  bool
+	 */
+	private static function mayDiscloseVersions(): bool
+	{
+		try
+		{
+			return !\Joomla\CMS\Factory::getApplication()->isClient('site');
+		}
+		catch (\Throwable $e)
+		{
+			return false;
+		}
 	}
 }
