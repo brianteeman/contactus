@@ -128,17 +128,8 @@ class VersionLimitsTest extends TestCase
 		$lockPlatform = $lock['platform-overrides']['php'] ?? null;
 		$lockPhp      = $lock['platform']['php'] ?? null;
 
-		$this->assertOrKnownIssue(
-			$lockPlatform === ($composer['config']['platform']['php'] ?? null) && $lockPhp === $composer['require']['php'],
-			5,
-			sprintf(
-				'composer.lock is stale (platform override %s, PHP requirement %s; composer.json says %s and %s), so `phing git` fails at `composer install`. Run `composer update --lock`.',
-				var_export($lockPlatform, true),
-				var_export($lockPhp, true),
-				$composer['config']['platform']['php'] ?? 'none',
-				$composer['require']['php']
-			)
-		);
+		$this->assertSame($composer['config']['platform']['php'] ?? null, $lockPlatform, 'composer.lock platform override mismatch.');
+		$this->assertSame($composer['require']['php'], $lockPhp, 'composer.lock PHP requirement mismatch.');
 	}
 
 	/**
