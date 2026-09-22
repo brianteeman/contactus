@@ -8,6 +8,7 @@
 // Protect from unauthorized access
 defined('_JEXEC') or die();
 
+use Akeeba\Component\ContactUs\Administrator\Model\UpgradeModel;
 use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Log\Log;
 
@@ -108,7 +109,54 @@ class Pkg_ContactusInstallerScript extends InstallerScript
 
 		$this->invalidateFiles();
 
-		return true;
+		$model = $this->getUpgradeModel();
+
+		if (empty($model))
+		{
+			return true;
+		}
+
+		return $model->postflight($type, $parent);
+	}
+
+	/**
+	 * Get the UpgradeModel of the installed component.
+	 *
+	 * @return  UpgradeModel|null  The upgrade Model. NULL if it cannot be loaded.
+	 */
+	private function getUpgradeModel(): ?UpgradeModel
+	{
+		$filePath = JPATH_ADMINISTRATOR . '/components/com_contactus/src/Model/UpgradeModel.php';
+
+		// Make sure the version of the Model we just installed is loaded, regardless of the OPcache state.
+		if (function_exists('opcache_invalidate'))
+		{
+			@opcache_invalidate($filePath, true);
+		}
+
+		if (!class_exists(UpgradeModel::class))
+		{
+			if (!file_exists($filePath) || !is_readable($filePath))
+			{
+				return null;
+			}
+
+			include_once $filePath;
+		}
+
+		if (!class_exists(UpgradeModel::class))
+		{
+			return null;
+		}
+
+		try
+		{
+			return new UpgradeModel();
+		}
+		catch (Throwable $e)
+		{
+			return null;
+		}
 	}
 
 	private function invalidateFiles()
