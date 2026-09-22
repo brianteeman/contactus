@@ -78,7 +78,7 @@ class ItemController extends BaseController
 		if ($cParams->get('offline', 0))
 		{
 			$this->setMessage(Text::_('COM_CONTACTUS_ITEM_ERR_OFFLINE'), 'warning');
-			$this->setRedirect(Route::_('index.php?option=com_contactus&view=Item.add', false));
+			$this->setRedirect(Route::_('index.php?option=com_contactus&task=item.add', false));
 
 			return true;
 		}
@@ -149,7 +149,7 @@ class ItemController extends BaseController
 
 			$app->setUserState($context . '.data', $data);
 
-			$this->setRedirect(Route::_('index.php?option=com_contactus&view=Item.add', false));
+			$this->setRedirect(Route::_('index.php?option=com_contactus&task=item.add', false));
 
 			return false;
 		}
@@ -162,7 +162,7 @@ class ItemController extends BaseController
 			$app->setUserState('com_contactus.edit.item.data', $validData);
 
 			$this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $error), 'error');
-			$this->setRedirect(Route::_('index.php?option=com_contactus&view=Item.add', false));
+			$this->setRedirect(Route::_('index.php?option=com_contactus&task=item.add', false));
 
 			return false;
 		}

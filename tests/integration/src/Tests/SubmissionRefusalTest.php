@@ -178,11 +178,8 @@ class SubmissionRefusalTest extends AbstractE2ETestCase
 
 		$landing = $this->follow($surfer, $response);
 
-		$this->assertOrKnownIssue(
-			$landing->code === 200 && str_contains($landing->body, 'name="jform[fromname]"'),
-			4,
-			sprintf('a refused submission lands on an HTTP %d error page instead of the form (redirect to view=Item.add).', $landing->code)
-		);
+		$this->assertSame(200, $landing->code, sprintf('a refused submission lands on an HTTP %d error page instead of the form (redirect to view=Item.add).', $landing->code));
+		$this->assertBodyContains('name="jform[fromname]"', $landing, 'The contact form did not render on refusal.');
 
 		$this->assertBodyContains($jform['fromname'], $landing, 'The form must keep what the visitor typed.');
 	}
