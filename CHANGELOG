@@ -1,6 +1,7 @@
 <?php die() ?>
 ContactUs 4.3.0
 ================================================================================
+# When cleaning one cache failed, the remaining caches were not cleaned either
 ! PHP and Joomla minimum and maximum version compatibility is now enforced
 ! Guests could read any stored contact message
 - Removed legacy error handler
