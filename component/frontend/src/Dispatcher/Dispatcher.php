@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 use Akeeba\Component\ContactUs\Administrator\Helper\VersionLimits;
 use Akeeba\Component\ContactUs\Administrator\Mixin\TriggerEventTrait;
 use Joomla\CMS\Dispatcher\ComponentDispatcher;
-use Throwable;
 
 class Dispatcher extends ComponentDispatcher
 {
@@ -22,37 +21,24 @@ class Dispatcher extends ComponentDispatcher
 
 	public function dispatch()
 	{
-		try
-		{
-			// Check the supported PHP and Joomla version limits
-			VersionLimits::throwIfVersionsIncompatible();
+		// Check the supported PHP and Joomla version limits
+		VersionLimits::throwIfVersionsIncompatible();
 
-			$jLang = $this->app->getLanguage();
-			$jLang->load($this->option, JPATH_ADMINISTRATOR . '/components/com_contacts', null, true, true);
-			$jLang->load($this->option, JPATH_ADMINISTRATOR, null, true, true);
-			$jLang->load($this->option, JPATH_SITE, null, true, true);
+		$jLang = $this->app->getLanguage();
+		$jLang->load($this->option, JPATH_ADMINISTRATOR . '/components/com_contacts', null, true, true);
+		$jLang->load($this->option, JPATH_ADMINISTRATOR, null, true, true);
+		$jLang->load($this->option, JPATH_SITE, null, true, true);
 
-			// Apply the view and controller from the request, falling back to the default view/controller if necessary
-			$this->applyViewAndController();
+		// Apply the view and controller from the request, falling back to the default view/controller if necessary
+		$this->applyViewAndController();
 
-			// Dispatch the component
-			$this->triggerEvent('onBeforeDispatch');
+		// Dispatch the component
+		$this->triggerEvent('onBeforeDispatch');
 
-			parent::dispatch();
+		parent::dispatch();
 
-			// This will only execute if there is no redirection set by the Controller
-			$this->triggerEvent('onAfterDispatch');
-		}
-		catch (Throwable $e)
-		{
-			$title = 'Akeeba Contactus';
-			$isPro = false;
-
-			if (!(include_once JPATH_ADMINISTRATOR . '/components/com_contactus/commontemplates/errorhandler.php'))
-			{
-				throw $e;
-			}
-		}
+		// This will only execute if there is no redirection set by the Controller
+		$this->triggerEvent('onAfterDispatch');
 	}
 
 	private function applyViewAndController(): void

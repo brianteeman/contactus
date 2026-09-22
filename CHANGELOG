@@ -18,6 +18,7 @@ ContactUs 4.3.0
 # [LOW] Malformed array filter parameters caused persistent HTTP 500 errors in backend lists
 # [LOW] Raw database or mailer error messages could be shown to visitors on oversized or invalid input
 # [LOW] The privacy policy URL was printed unescaped into the public form
+# [LOW] PHP warnings were logged on ordinary requests with missing consent or frontend errors
 
 ContactUs 4.2.7
 ================================================================================

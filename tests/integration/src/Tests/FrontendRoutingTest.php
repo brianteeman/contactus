@@ -107,9 +107,9 @@ class FrontendRoutingTest extends AbstractE2ETestCase
 
 		$warnings = array_values(array_filter($this->newPhpErrors(), fn(string $line): bool => str_contains($line, 'errorhandler.php')));
 
-		$this->assertOrKnownIssue(
-			$warnings === [],
-			10,
+		$this->assertSame(
+			[],
+			$warnings,
 			'every front-end error makes the dispatcher include the removed commontemplates/errorhandler.php, logging two PHP warnings.'
 		);
 	}

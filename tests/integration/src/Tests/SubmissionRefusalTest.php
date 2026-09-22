@@ -203,9 +203,9 @@ class SubmissionRefusalTest extends AbstractE2ETestCase
 			fn(string $line): bool => str_contains($line, 'com_contactus')
 		));
 
-		$this->assertOrKnownIssue(
-			$warnings === [],
-			10,
+		$this->assertSame(
+			[],
+			$warnings,
 			"the site logged PHP warnings for an ordinary refusal:\n" . implode("\n", $warnings)
 		);
 	}
