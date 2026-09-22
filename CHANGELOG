@@ -17,6 +17,7 @@ ContactUs 4.3.0
 # [LOW] Backend edit forms were readable with inadequate permissions
 # [LOW] Malformed array filter parameters caused persistent HTTP 500 errors in backend lists
 # [LOW] Raw database or mailer error messages could be shown to visitors on oversized or invalid input
+# [LOW] The privacy policy URL was printed unescaped into the public form
 
 ContactUs 4.2.7
 ================================================================================

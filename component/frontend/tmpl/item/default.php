@@ -28,7 +28,22 @@ $wa
 	->addInlineScript($keepalive)
 	->useScript('form.validate');
 
-$privacyPolicyPage = ComponentHelper::getParams('com_contactus')->get('privacypolicy', '/privacy.html');
+$privacyPolicyPage = (string) ComponentHelper::getParams('com_contactus')->get('privacypolicy', '/privacy.html');
+$privacyPolicyPage = trim($privacyPolicyPage);
+
+if ($privacyPolicyPage === '')
+{
+	$privacyPolicyPage = '/privacy.html';
+}
+
+$scheme = parse_url($privacyPolicyPage, PHP_URL_SCHEME);
+
+if ($scheme !== null && !in_array(strtolower($scheme), ['http', 'https'], true))
+{
+	$privacyPolicyPage = '/privacy.html';
+}
+
+$privacyPolicyPage = htmlspecialchars($privacyPolicyPage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $captcha           = $this->getCaptchaField();
 ?>
 <form action="<?= Route::_('index.php?option=com_contactus&task=Item.save'); ?>"

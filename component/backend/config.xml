@@ -20,6 +20,9 @@
 
         <field name="privacypolicy"
                type="url"
+               filter="url"
+               validate="url"
+               relative="true"
                label="COM_CONTACTUS_CONFIG_PRIVACYPOLICY_LABEL"
                description="COM_CONTACTUS_CONFIG_PRIVACYPOLICY_DESC"
                class="input-xxlarge"/>

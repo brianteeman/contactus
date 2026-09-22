@@ -82,9 +82,8 @@ class SensitiveOutputTest extends AbstractE2ETestCase
 		$this->assertStatus(200, $response);
 		$this->assertBodyContains('example.test/', $response, 'The privacy policy link did not render; the test would prove nothing.');
 
-		$this->assertOrKnownIssue(
-			!str_contains($response->body, 'onmouseover="alert('),
-			9,
+		$this->assertFalse(
+			str_contains($response->body, 'onmouseover="alert('),
 			'the privacy policy URL is printed into href="…" unescaped; a quote in it adds attributes (and script) to the public form.'
 		);
 	}
