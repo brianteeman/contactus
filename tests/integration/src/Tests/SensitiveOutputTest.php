@@ -130,14 +130,8 @@ class SensitiveOutputTest extends AbstractE2ETestCase
 
 		$this->assertNotSame('', $messages, "The visitor was not told why.\n" . $page->summary());
 
-		$this->assertOrKnownIssue(
-			!str_contains($messages, $rawError) && $stored === 0 && $this->mailpit()->count() === 0,
-			8,
-			sprintf(
-				'the visitor is shown "%s"; the message was stored %d time(s), yet the visitor is told it failed.',
-				trim($messages),
-				$stored
-			)
-		);
+		$this->assertFalse(str_contains($messages, $rawError), sprintf('the visitor is shown "%s"', trim($messages)));
+		$this->assertSame(0, $stored, sprintf('the message was stored %d time(s)', $stored));
+		$this->assertSame(0, $this->mailpit()->count(), 'emails were sent despite bad input');
 	}
 }

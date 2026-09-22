@@ -21,6 +21,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\User\UserFactoryInterface;
@@ -102,7 +103,7 @@ class ItemModel extends AdminItemModel
 			// disabled or access-restricted category, bypassing those gates.
 			$this->assertValidCategory($data['contactus_category_id'] ?? null);
 
-			$this->assertNotEmpty($data['consent'], 'COM_CONTACTUS_ITEM_ERR_CONSENT');
+			$this->assertNotEmpty($data['consent'] ?? null, 'COM_CONTACTUS_ITEM_ERR_CONSENT');
 
 			$captcha = $this->getCaptchaObject();
 
@@ -160,6 +161,10 @@ class ItemModel extends AdminItemModel
 		$this->assertNotEmpty($table->fromemail, 'COM_CONTACTUS_ITEM_ERR_FROMEMAIL_EMPTY');
 		$this->assertNotEmpty($table->subject, 'COM_CONTACTUS_ITEM_ERR_SUBJECT_EMPTY');
 		$this->assertNotEmpty($table->body, 'COM_CONTACTUS_ITEM_ERR_BODY_EMPTY');
+
+		$this->assert(mb_strlen($table->fromname, 'UTF-8') <= 255, 'COM_CONTACTUS_ITEM_ERR_FROMNAME_EMPTY');
+		$this->assert(mb_strlen($table->fromemail, 'UTF-8') <= 255, 'COM_CONTACTUS_ITEM_ERR_FROMEMAIL_EMPTY');
+		$this->assert(mb_strlen($table->subject, 'UTF-8') <= 255, 'COM_CONTACTUS_ITEM_ERR_SUBJECT_EMPTY');
 	}
 
 	/**
@@ -220,40 +225,42 @@ class ItemModel extends AdminItemModel
 
 	private function sendEmailToAdministrators($table, $category)
 	{
-		/** @noinspection PhpDeprecationInspection */
-		$mailer = clone (class_exists(MailerFactoryInterface::class) ? Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer() : Factory::getMailer());
-		$app    = Factory::getApplication();
-
-		$mailer->setFrom($app->get('mailfrom'), $app->get('fromname'));
-		$mailer->addReplyTo($table->fromemail, $table->fromname);
-
-		// Set the recipient to this category's email address
-		$emails = explode(',', $category->email);
-		$emails = array_map('trim', $emails);
-
-		if (empty($emails))
-		{
-			return;
-		}
-
-		$mailer->setSubject(Text::sprintf('COM_CONTACTUS_ITEMS_MSG_EMAIL_SUBJECT',
-			$app->get('sitename'),
-			$category->title,
-			$table->subject));
-
-		foreach ($emails as $email)
-		{
-			$mailer->addRecipient($email);
-		}
-
-		$mailer->msgHTML($table->body);
-
 		try
 		{
+			/** @noinspection PhpDeprecationInspection */
+			$mailer = clone (class_exists(MailerFactoryInterface::class) ? Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer() : Factory::getMailer());
+			$app    = Factory::getApplication();
+
+			$mailer->setFrom($app->get('mailfrom'), $app->get('fromname'));
+			$mailer->addReplyTo($table->fromemail, $table->fromname);
+
+			// Set the recipient to this category's email address
+			$emails = explode(',', $category->email);
+			$emails = array_map('trim', $emails);
+
+			if (empty($emails))
+			{
+				return;
+			}
+
+			$mailer->setSubject(Text::sprintf('COM_CONTACTUS_ITEMS_MSG_EMAIL_SUBJECT',
+				$app->get('sitename'),
+				$category->title,
+				$table->subject));
+
+			foreach ($emails as $email)
+			{
+				$mailer->addRecipient($email);
+			}
+
+			$mailer->msgHTML($table->body);
+
 			$mailer->Send();
 		}
-		catch (Exception $e)
+		catch (\Throwable $e)
 		{
+			Log::add($e->getMessage(), Log::WARNING, 'com_contactus');
+
 			return;
 		}
 	}
@@ -268,24 +275,26 @@ class ItemModel extends AdminItemModel
 			return false;
 		}
 
-		$autoReply = $category->autoreply;
-		$autoReply = $this->preProcessAutoreply($autoReply, $table, $category);
-
-		/** @noinspection PhpDeprecationInspection */
-		$mailer = clone (class_exists(MailerFactoryInterface::class) ? Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer() : Factory::getMailer());
-		$app    = Factory::getApplication();
-
-		$mailer->setFrom($app->get('mailfrom'), $app->get('fromname'));
-		$mailer->addRecipient($table->fromemail, $table->fromname);
-		$mailer->setSubject(Text::sprintf('COM_CONTACTUS_ITEMS_MSG_AUTOREPLY_SUBJECT', $app->get('sitename')));
-		$mailer->msgHTML($autoReply);
-
 		try
 		{
+			$autoReply = $category->autoreply;
+			$autoReply = $this->preProcessAutoreply($autoReply, $table, $category);
+
+			/** @noinspection PhpDeprecationInspection */
+			$mailer = clone (class_exists(MailerFactoryInterface::class) ? Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer() : Factory::getMailer());
+			$app    = Factory::getApplication();
+
+			$mailer->setFrom($app->get('mailfrom'), $app->get('fromname'));
+			$mailer->addRecipient($table->fromemail, $table->fromname);
+			$mailer->setSubject(Text::sprintf('COM_CONTACTUS_ITEMS_MSG_AUTOREPLY_SUBJECT', $app->get('sitename')));
+			$mailer->msgHTML($autoReply);
+
 			$mailer->Send();
 		}
-		catch (Exception $e)
+		catch (\Throwable $e)
 		{
+			Log::add($e->getMessage(), Log::WARNING, 'com_contactus');
+
 			return false;
 		}
 

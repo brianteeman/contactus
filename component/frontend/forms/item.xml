@@ -21,6 +21,7 @@
                 type="text"
                 label="COM_CONTACTUS_ITEMS_FIELD_FROMNAME"
                 required="true"
+                maxlength="255"
         />
 
         <field
@@ -28,6 +29,8 @@
                 type="email"
                 label="COM_CONTACTUS_ITEMS_FIELD_FROMEMAIL"
                 required="true"
+                validate="email"
+                maxlength="255"
         />
 
     </fieldset>
@@ -41,6 +44,7 @@
                 type="text"
                 label="COM_CONTACTUS_ITEMS_FIELD_SUBJECT"
                 required="true"
+                maxlength="255"
         />
 
         <field

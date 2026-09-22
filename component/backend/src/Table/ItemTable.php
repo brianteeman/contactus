@@ -71,21 +71,21 @@ class ItemTable extends Table
 			return false;
 		}
 
-		if (empty($this->fromname))
+		if (empty($this->fromname) || mb_strlen($this->fromname, 'UTF-8') > 255)
 		{
 			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_FROMNAME_EMPTY'));
 
 			return false;
 		}
 
-		if (empty($this->fromemail))
+		if (empty($this->fromemail) || mb_strlen($this->fromemail, 'UTF-8') > 255)
 		{
 			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_FROMEMAIL_EMPTY'));
 
 			return false;
 		}
 
-		if (empty($this->subject))
+		if (empty($this->subject) || mb_strlen($this->subject, 'UTF-8') > 255)
 		{
 			$this->setErrorOrThrow(Text::_('COM_CONTACTUS_ITEM_ERR_SUBJECT_EMPTY'));
 

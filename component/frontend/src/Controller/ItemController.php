@@ -19,6 +19,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Form\FormFactoryAwareTrait;
 use Joomla\CMS\Form\FormFactoryInterface;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\Router\Route;
@@ -155,13 +156,23 @@ class ItemController extends BaseController
 		}
 
 		// Attempt to save the data.
-		[$isSaved, $error,] = $this->cmsObjectSafeCall($model, 'save', $validData);
+		try
+		{
+			[$isSaved, $error,] = $this->cmsObjectSafeCall($model, 'save', $validData);
+		}
+		catch (\Throwable $e)
+		{
+			Log::add($e->getMessage(), Log::ERROR, 'com_contactus');
+			$isSaved = false;
+			$error   = '';
+		}
 
 		if (!$isSaved)
 		{
 			$app->setUserState('com_contactus.edit.item.data', $validData);
 
-			$this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $error), 'error');
+			$errorMessage = $error ? Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $error) : Text::_('JLIB_APPLICATION_ERROR_SAVE_FAILED');
+			$this->setMessage($errorMessage, 'error');
 			$this->setRedirect(Route::_('index.php?option=com_contactus&task=item.add', false));
 
 			return false;
