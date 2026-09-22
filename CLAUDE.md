@@ -8,7 +8,13 @@ See `README.md` for build prerequisites and the `buildfiles` sibling-directory l
 
 This project's JS-only target is `phing compile-javascript` (not `compile-js` as in most Akeeba projects).
 
-There are no automated tests or linting configured.
+## Tests
+
+- Unit tests: `phpunit` from the repository root (config `phpunit.xml`, tests in `UnitTest/`; see `UnitTest/README.md`). PHPUnit is installed globally, never as a project dependency.
+- End-to-end tests: `tests/integration/docker/run.sh` provisions a disposable Joomla site in Docker and runs `phpunit -c phpunit-integration.xml` against it over HTTP; `--matrix` covers every supported Joomla/PHP pair. See `tests/integration/README.md`.
+- Tests that hit a known product bug skip with `Known issue #N`, referring to the git-ignored `known-issues.md`; fixing the bug makes the test pass, after which the `assertOrKnownIssue()` call becomes a plain assertion.
+
+There is no linting configured.
 
 ## Conventions
 

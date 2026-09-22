@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.4/phpunit.xsd"
+         bootstrap="UnitTest/bootstrap.php"
+         processIsolation="false"
+         cacheResult="false"
+         beStrictAboutChangesToGlobalState="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         displayDetailsOnSkippedTests="true"
+         colors="true"
+         defaultTestSuite="unit"
+>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>UnitTest</directory>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <file>component/backend/src/Helper/VersionLimits.php</file>
+            <file>component/backend/src/Mixin/GetPropertiesAwareTrait.php</file>
+            <file>component/backend/src/Mixin/CMSObjectWorkaroundTrait.php</file>
+        </include>
+    </source>
+</phpunit>

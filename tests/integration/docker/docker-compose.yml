@@ -1,0 +1,103 @@
+# Dockerized throwaway stack for the Akeeba ContactUs end-to-end tests.
+#
+# All versions are configurable through the .env file (see env.dist):
+#   JOOMLA_VERSION, PHP_VERSION, APACHE_VERSION, MYSQL_VERSION, MAILPIT_VERSION.
+#
+# Do not run this by hand. Use ./run.sh, which scrubs, provisions and tests in
+# one shot. This file only describes the services.
+
+name: contactus-e2e
+
+services:
+  db:
+    image: "mysql:${MYSQL_VERSION:-8.4}"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
+      MYSQL_DATABASE: "${DB_NAME:-cue2e}"
+      MYSQL_USER: "${DB_USER:-cue2e}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-cue2e}"
+    command:
+      - "--sql-mode="
+    ports:
+      # Published so the host-side PHPUnit process can seed and inspect fixtures.
+      - "${DB_PORT:-33316}:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - default
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${DB_ROOT_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+      args:
+        PHP_VERSION: "${PHP_VERSION:-8.5}"
+        PUID: "${PUID:-1000}"
+        PGID: "${PGID:-1000}"
+    volumes:
+      - ./www:/var/www/html
+    # The site itself has NO route to the internet: it only sees db, mailpit and web over the internal
+    # "backend" network. That keeps every run hermetic, and it is exactly the "host blocks outbound
+    # HTTP" situation in which the Akismet check fails (see SensitiveOutputTest).
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        APACHE_VERSION: "${APACHE_VERSION:-2.4}"
+    ports:
+      - "${HTTP_PORT:-8170}:80"
+    volumes:
+      - ./www:/var/www/html
+    networks:
+      - default
+      - backend
+    depends_on:
+      - php
+
+  # Outbound mail sink. Joomla is pointed at smtp://mailpit:1025, so the
+  # notification to the category's recipients and the auto-reply to the visitor
+  # go through the real mailer configuration and a real SMTP dialogue. The tests
+  # read the result back over the REST API on 8025.
+  #
+  # Mailpit never relays: it accepts a message and stores it.
+  mailpit:
+    image: "axllent/mailpit:${MAILPIT_VERSION:-v1.21}"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: "1"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "1"
+      MP_MAX_MESSAGES: "0"
+    ports:
+      - "${MAILPIT_HTTP_PORT:-8175}:8025"
+    networks:
+      - default
+      - backend
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+networks:
+  # Published ports and the host live here.
+  default:
+  # php's only network. `internal` means no gateway: nothing on it can reach the outside world.
+  backend:
+    internal: true
+
+volumes:
+  dbdata:
