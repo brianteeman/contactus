@@ -53,6 +53,13 @@ class ItemController extends BaseController
 		$this->registerDefaultTask('add');
 	}
 
+	public function display($cachable = false, $urlparams = [])
+	{
+		$this->app->getInput()->set('contactus_item_id', null);
+
+		return parent::display($cachable, $urlparams);
+	}
+
 	public function add()
 	{
 		$this->app->getInput()->set('contactus_item_id', null);
@@ -62,6 +69,8 @@ class ItemController extends BaseController
 
 	public function save()
 	{
+		$this->app->getInput()->set('contactus_item_id', null);
+
 		$this->checkToken();
 
 		$cParams = ComponentHelper::getParams('com_contactus');

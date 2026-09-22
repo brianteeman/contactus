@@ -54,6 +54,18 @@ class ItemModel extends AdminItemModel
 		return Captcha::getInstance($plugin, ['namespace' => $namespace]);
 	}
 
+	public function getItem($pk = null)
+	{
+		return parent::getItem(0);
+	}
+
+	protected function populateState()
+	{
+		parent::populateState();
+
+		$this->setState($this->getName() . '.id', 0);
+	}
+
 	protected function loadFormData()
 	{
 		$app  = Factory::getApplication();
@@ -71,13 +83,13 @@ class ItemModel extends AdminItemModel
 
 	public function save($data)
 	{
-		// Make sure we are always saving into a new record by unsetting the ID data field and state.
+		// Make sure we are always saving into a new record by zeroing the ID data field and state.
 		$table = $this->getTable();
 		$key   = $table->getKeyName();
 
 		if (isset($data[$key]))
 		{
-			unset($data[$key]);
+			$data[$key] = 0;
 		}
 
 		$this->setState($this->getName() . '.id', 0);

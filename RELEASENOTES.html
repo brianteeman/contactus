@@ -9,3 +9,13 @@
 	<strong>Removed legacy error handler</strong>.
 	We removed our legacy custom error handler. If you are met with an Exception or PHP error when using our software, please go to your site's administrator, System, Global Configuration, and set Debug Mode to Yes and Error Reporting to Developer. Then, reproduce the error. You will get the same level of information as our now-removed error handler. It is enough to help us help you.
 </p>
+
+<p>
+	<strong>Bug fixes and security improvements</strong>
+</p>
+<ul>
+	<li><strong>[CRITICAL]</strong> Guests could read any stored contact message.</li>
+	<li><strong>[HIGH]</strong> Guests could overwrite any stored contact message.</li>
+	<li><strong>[MEDIUM]</strong> The layout URL parameter could make a page include a PHP file from outside the templates folder.</li>
+	<li><strong>[LOW]</strong> The version compatibility error disclosed exact PHP and Joomla versions on public pages.</li>
+</ul>

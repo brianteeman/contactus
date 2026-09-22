@@ -59,9 +59,8 @@ class StoredMessageProtectionTest extends AbstractE2ETestCase
 		$this->assertStatus(200, $response);
 		$this->assertBodyContains('name="jform[fromname]"', $response, 'The contact form did not render.');
 
-		$this->assertOrKnownIssue(
-			!str_contains($response->body, $secret),
-			1,
+		$this->assertFalse(
+			str_contains($response->body, $secret),
 			sprintf('a guest reads stored message #%d (sender, email, subject, body) by passing contactus_item_id to the public form.', $id)
 		);
 	}
@@ -86,15 +85,13 @@ class StoredMessageProtectionTest extends AbstractE2ETestCase
 		$after   = $this->messageRow($id);
 		$created = $this->messagesMatching($this->markerOf($jform));
 
-		$this->assertOrKnownIssue(
-			$after === $before && count($created) === 1 && (int) $created[0]['contactus_item_id'] !== $id,
-			2,
-			sprintf(
-				'a guest overwrote stored message #%d (its subject is now "%s") by adding contactus_item_id to the form POST.',
-				$id,
-				$after['subject'] ?? '(deleted)'
-			)
-		);
+		$this->assertSame($before, $after, sprintf(
+			'a guest overwrote stored message #%d (its subject is now "%s") by adding contactus_item_id to the form POST.',
+			$id,
+			$after['subject'] ?? '(deleted)'
+		));
+		$this->assertCount(1, $created, 'The submission must be a new message.');
+		$this->assertNotSame($id, (int) $created[0]['contactus_item_id'], 'The created message must not reuse the existing ID.');
 	}
 
 	/**
