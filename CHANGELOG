@@ -11,6 +11,7 @@ ContactUs 4.3.0
 ~ Funnelled the createQuery()/getQuery(true) compatibility branch through a single Helper\DbQuery::create() call
 # [HIGH] Guests could overwrite any stored contact message
 # [MEDIUM] The layout URL parameter could make a page include a PHP file from outside the templates folder
+# [MEDIUM] Akismet API key was disclosed to visitors when Akismet is unreachable
 # [LOW] The version compatibility error disclosed exact PHP and Joomla versions on public pages
 
 ContactUs 4.2.7

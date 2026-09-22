@@ -11,6 +11,9 @@
                type="text"
                default=""
                size="50"
+               filter="cmd"
+               validate="regex"
+               regex="^[a-zA-Z0-9]{1,64}$"
                label="COM_CONTACTUS_CONFIG_AKISMET_API_KEY_LABEL"
                description="COM_CONTACTUS_CONFIG_AKISMET_API_KEY_DESC"
                class="input-xxlarge"/>

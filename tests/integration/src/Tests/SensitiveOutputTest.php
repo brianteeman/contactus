@@ -61,16 +61,9 @@ class SensitiveOutputTest extends AbstractE2ETestCase
 		$stored   = count($this->messagesMatching($this->markerOf($jform)));
 		$notified = $this->mailpit()->messagesTo(static::$fixtures->recipients('general')[0]) !== [];
 
-		$this->assertOrKnownIssue(
-			!$leaked && $stored === 1 && $notified,
-			3,
-			sprintf(
-				'with Akismet unreachable the visitor %s the API key, the message is %s, and the recipients are %s.',
-				$leaked ? 'SEES' : 'does not see',
-				$stored === 1 ? 'stored' : 'stored ' . $stored . ' times',
-				$notified ? 'notified' : 'NOT notified'
-			)
-		);
+		$this->assertFalse($leaked, 'The visitor sees the Akismet API key in the error message.');
+		$this->assertSame(1, $stored, 'The message was not stored exactly once.');
+		$this->assertTrue($notified, 'The recipients were not notified.');
 	}
 
 	/**

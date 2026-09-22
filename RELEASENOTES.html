@@ -1,3 +1,12 @@
+<h3>Security release</h3>
+
+<p>
+	This version of ContactUs addresses a number of security issues and further hardens the extension against issues which could have security impact under the right conditions.
+</p>
+<p>
+	To the best of our knowledge, nobody has previously used, discovered, or reported the security issues addressed in this release. As a result, we have no reason to believe they have been or are being actively exploited.
+</p>
+
 <h3>What's new</h3>
 
 <p>
@@ -17,5 +26,6 @@
 	<li><strong>[CRITICAL]</strong> Guests could read any stored contact message.</li>
 	<li><strong>[HIGH]</strong> Guests could overwrite any stored contact message.</li>
 	<li><strong>[MEDIUM]</strong> The layout URL parameter could make a page include a PHP file from outside the templates folder.</li>
+	<li><strong>[MEDIUM]</strong> Akismet API key was disclosed to visitors when Akismet is unreachable.</li>
 	<li><strong>[LOW]</strong> The version compatibility error disclosed exact PHP and Joomla versions on public pages.</li>
 </ul>
