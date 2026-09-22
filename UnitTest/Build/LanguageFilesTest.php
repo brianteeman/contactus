@@ -9,7 +9,6 @@ namespace Akeeba\ContactUs\UnitTest\Build;
 
 defined('_JEXEC') or die;
 
-use Akeeba\ContactUs\UnitTest\KnownIssueTrait;
 use Akeeba\ContactUs\UnitTest\LanguageFile;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -25,8 +24,6 @@ use PHPUnit\Framework\TestCase;
  */
 class LanguageFilesTest extends TestCase
 {
-	use KnownIssueTrait;
-
 	/**
 	 * Every shipped .ini file, including the package's.
 	 *
@@ -208,11 +205,7 @@ class LanguageFilesTest extends TestCase
 			$missing[] = $key . ' (' . implode(', ', array_unique($files)) . ')';
 		}
 
-		$this->assertOrKnownIssue(
-			$missing === [],
-			11,
-			"language keys used in the code but defined in no en-GB file (Joomla shows the raw key):\n" . implode("\n", $missing)
-		);
+		$this->assertSame([], $missing, "language keys used in the code but defined in no en-GB file (Joomla shows the raw key):\n" . implode("\n", $missing));
 	}
 
 	/**

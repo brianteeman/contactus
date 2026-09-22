@@ -23,6 +23,7 @@ tag: pt-PT
 | Privacy policy | Política de privacidade |
 | Privacy policy URL | URL da política de privacidade |
 | Consent | Consentimento |
+| Search | Pesquisar |
 | CAPTCHA | CAPTCHA (unchanged) |
 | Subject | Assunto |
 | Message | Mensagem |

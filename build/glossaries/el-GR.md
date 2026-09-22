@@ -20,6 +20,7 @@ tag: el-GR
 | Privacy policy | Πολιτική απορρήτου |
 | Privacy policy URL | URL πολιτικής απορρήτου |
 | Consent | Συγκατάθεση |
+| Search | Αναζήτηση |
 | CAPTCHA | CAPTCHA (unchanged) |
 | Subject | Θέμα |
 | Message | Μήνυμα |
