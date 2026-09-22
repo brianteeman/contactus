@@ -14,6 +14,7 @@ ContactUs 4.3.0
 # [MEDIUM] Akismet API key was disclosed to visitors when Akismet is unreachable
 # [MEDIUM] Refused contact form submissions resulted in an HTTP 404 error page
 # [LOW] The version compatibility error disclosed exact PHP and Joomla versions on public pages
+# [LOW] Backend edit forms were readable with inadequate permissions
 
 ContactUs 4.2.7
 ================================================================================

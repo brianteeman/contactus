@@ -210,11 +210,7 @@ class BackendAccessTest extends AbstractE2ETestCase
 
 		$response = $this->loggedInBackend('viewer')->get($this->adminUrl(['view' => 'item', 'layout' => 'edit', 'contactus_item_id' => $id]));
 
-		$this->assertOrKnownIssue(
-			!str_contains($response->body, $secret),
-			6,
-			'a back-end user with core.manage only (no core.edit) reads a message through view=item&layout=edit&contactus_item_id=N.'
-		);
+		$this->assertBodyNotContains($secret, $response, 'a back-end user with core.manage only (no core.edit) reads a message through view=item&layout=edit&contactus_item_id=N.');
 	}
 
 	/**
