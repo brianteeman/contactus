@@ -248,7 +248,7 @@ class LanguageFilesTest extends TestCase
 
 			foreach ($iterator as $file)
 			{
-				if ($file->getExtension() === 'ini')
+				if ($file->getExtension() === 'ini' && !str_contains($file->getPathname(), '/Dependency/'))
 				{
 					$files[substr($file->getPathname(), strlen($root) + 1)] = $file->getPathname();
 				}

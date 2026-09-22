@@ -132,7 +132,13 @@ class PackageSurfaceTest extends TestCase
 
 		$onDisk = array_map(
 			fn(string $relative): string => substr($relative, strlen('component/')),
-			array_keys(self::filesUnder('component', 'ini'))
+			array_keys(array_filter(
+				self::filesUnder('component', 'ini'),
+				// Not a translation file: HTML Purifier's own config directive schema data, bundled under
+				// src/Dependency/ (see scoper.inc.php).
+				fn(string $relative): bool => !str_contains($relative, '/src/Dependency/'),
+				ARRAY_FILTER_USE_KEY
+			))
 		);
 
 		sort($listed);

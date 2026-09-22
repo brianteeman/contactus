@@ -14,6 +14,7 @@ use Akeeba\Component\ContactUs\Administrator\Mixin\CMSObjectWorkaroundTrait;
 use Akeeba\Component\ContactUs\Administrator\Model\ItemModel as AdminItemModel;
 use Akeeba\Component\ContactUs\Administrator\Table\ItemTable;
 use Akeeba\Component\ContactUs\Site\Helper\Akismet;
+use Akeeba\Component\ContactUs\Site\Helper\MailContentFilter;
 use Exception;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Captcha\Captcha;
@@ -141,13 +142,12 @@ class ItemModel extends AdminItemModel
 				->bind(':catid', $table->contactus_category_id);
 			$category = $db->setQuery($query)->loadObject();
 
-			// Don't email the admins if it's spam.
+			// Don't email the admins, or send the auto-reply, if it's spam.
 			if (!$isSpam)
 			{
 				$this->sendEmailToAdministrators($table, $category);
+				$this->sendEmailToUser($table, $category);
 			}
-
-			$this->sendEmailToUser($table, $category);
 		}
 
 		return $ret;
@@ -253,7 +253,7 @@ class ItemModel extends AdminItemModel
 				$mailer->addRecipient($email);
 			}
 
-			$mailer->msgHTML($table->body);
+			$mailer->msgHTML(MailContentFilter::purifyBody($table->body));
 
 			$mailer->Send();
 		}
@@ -313,22 +313,15 @@ class ItemModel extends AdminItemModel
 	private function preProcessAutoreply(string $text, $table, stdClass $category): string
 	{
 		$app          = Factory::getApplication();
+		$escape       = fn(string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 		$replacements = [
-			'[SITENAME]' => $app->get('sitename'),
-			'[CATEGORY]' => $category->title,
+			'[SITENAME]'  => $escape($app->get('sitename')),
+			'[CATEGORY]'  => $escape($category->title),
+			'[FROMNAME]'  => $escape($table->fromname),
+			'[FROMEMAIL]' => $escape($table->fromemail),
+			'[SUBJECT]'   => $escape($table->subject),
+			'[BODY]'      => MailContentFilter::purifyBody($table->body),
 		];
-
-		$rawData = (array) $table;
-
-		foreach ($rawData as $key => $value)
-		{
-			if (str_starts_with($key, "\0"))
-			{
-				continue;
-			}
-
-			$replacements['[' . strtoupper($key) . ']'] = $value;
-		}
 
 		return str_replace(array_keys($replacements), array_values($replacements), $text);
 	}
