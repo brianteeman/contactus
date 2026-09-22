@@ -7,10 +7,10 @@
 
 namespace Akeeba\Component\ContactUs\Administrator\Mixin;
 
+defined('_JEXEC') || die;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\User\UserFactoryInterface;
-
-defined('_JEXEC') || die;
 
 trait TableCreateModifyTrait
 {

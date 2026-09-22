@@ -7,9 +7,9 @@
 
 namespace Akeeba\Component\ContactUs\Administrator\Mixin;
 
-use Joomla\CMS\Toolbar\Toolbar;
-
 defined('_JEXEC') || die;
+
+use Joomla\CMS\Toolbar\Toolbar;
 
 trait ViewToolbarTrait
 {
