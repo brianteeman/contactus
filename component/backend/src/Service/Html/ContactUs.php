@@ -87,8 +87,9 @@ class ContactUs
 	public function categoryFormat(?int $catId): string
 	{
 		$categories = $this->getCategories();
+		$title      = empty($catId) ? null : ($categories[$catId] ?? null);
 
-		return empty($catId) ? '—' : ($categories[$catId] ?? '—');
+		return $title === null ? '—' : htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	}
 
 	/**
