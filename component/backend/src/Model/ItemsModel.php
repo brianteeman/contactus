@@ -23,12 +23,16 @@ class ItemsModel extends ListModel
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = [
-				'search',
-				'enabled',
-				'category_id',
-				'subject',
 				'contactus_item_id',
+				'contactus_category_id',
+				'fromname',
+				'fromemail',
+				'subject',
+				'enabled',
 				'created_on',
+				'created_by',
+				'modified_on',
+				'modified_by',
 			];
 		}
 
@@ -37,26 +41,15 @@ class ItemsModel extends ListModel
 
 	protected function populateState($ordering = 'created_on', $direction = 'desc')
 	{
-		$app = Factory::getApplication();
-
-		$search = $app->getUserStateFromRequest($this->context . 'filter.search', 'filter_search', '', 'string');
-		$this->setState('filter.search', $search);
-
-		$enabled = $app->getUserStateFromRequest($this->context . 'filter.enabled', 'filter_enabled', '', 'string');
-		$this->setState('filter.enabled', ($enabled === '') ? $enabled : (int) $enabled);
-
-		$catId = $app->getUserStateFromRequest($this->context . 'filter.category_id', 'filter_category_id', '', 'string');
-		$this->setState('filter.category_id', ($catId === '') ? $catId : (int) $catId);
-
 		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.enabled');
-		$id .= ':' . $this->getState('filter.category_id');
+		$id .= ':' . serialize($this->getState('filter.search'));
+		$id .= ':' . serialize($this->getState('filter.enabled'));
+		$id .= ':' . serialize($this->getState('filter.category_id'));
 
 		return parent::getStoreId($id);
 	}
@@ -72,7 +65,7 @@ class ItemsModel extends ListModel
 		// ID / From / Subject / Body search filter
 		$search = $this->getState('filter.search');
 
-		if (!empty($search))
+		if (!empty($search) && is_string($search))
 		{
 			if (stripos($search, 'id:') === 0)
 			{
@@ -82,7 +75,7 @@ class ItemsModel extends ListModel
 			}
 			elseif (stripos($search, 'from:') === 0)
 			{
-				$search = '%' . substr($search, 5) . '%';
+				$search = '%' . $db->escape(substr($search, 5), true) . '%';
 				$query->where(
 					'(' .
 					$db->qn('fromname') . ' LIKE :search1' . ' OR ' .
@@ -94,7 +87,7 @@ class ItemsModel extends ListModel
 			}
 			else
 			{
-				$search = '%' . $search . '%';
+				$search = '%' . $db->escape($search, true) . '%';
 				$query->where(
 					'(' .
 					$db->qn('subject') . ' LIKE :search1' . ' OR ' .
@@ -111,8 +104,9 @@ class ItemsModel extends ListModel
 
 		if (is_numeric($enabled))
 		{
+			$enabled = (int) $enabled;
 			$query->where($db->quoteName('enabled') . ' = :enabled')
-				->bind(':enabled', $enabled);
+				->bind(':enabled', $enabled, ParameterType::INTEGER);
 		}
 
 		// Category filter
@@ -120,8 +114,9 @@ class ItemsModel extends ListModel
 
 		if (is_numeric($catId))
 		{
+			$catId = (int) $catId;
 			$query->where($db->quoteName('contactus_category_id') . ' = :catid')
-				->bind(':catid', $catId);
+				->bind(':catid', $catId, ParameterType::INTEGER);
 		}
 
 		// List ordering clause

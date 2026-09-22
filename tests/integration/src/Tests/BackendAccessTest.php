@@ -232,9 +232,9 @@ class BackendAccessTest extends AbstractE2ETestCase
 
 		$after = $surfer->get($this->adminUrl(['view' => 'items']));
 
-		$this->assertOrKnownIssue(
-			$after->code === 200,
-			7,
+		$this->assertSame(
+			200,
+			$after->code,
 			sprintf('after one request with filter[search][]=x the messages list answers HTTP %d on every visit for the rest of the session.', $after->code)
 		);
 	}

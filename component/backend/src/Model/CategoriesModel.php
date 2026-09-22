@@ -24,14 +24,17 @@ class CategoriesModel extends ListModel
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = [
-				'search',
+				'contactus_category_id',
+				'title',
 				'enabled',
-				'autoreply',
+				'sendautoreply',
 				'access',
 				'language',
-				'created_on',
-				'contactus_category_id',
 				'ordering',
+				'created_on',
+				'created_by',
+				'modified_on',
+				'modified_by',
 			];
 		}
 
@@ -40,33 +43,16 @@ class CategoriesModel extends ListModel
 
 	protected function populateState($ordering = 'contactus_category_id', $direction = 'asc')
 	{
-		$app = Factory::getApplication();
-
-		$search = $app->getUserStateFromRequest($this->context . 'filter.search', 'filter_search', '', 'string');
-		$this->setState('filter.search', $search);
-
-		$enabled = $app->getUserStateFromRequest($this->context . 'filter.enabled', 'filter_enabled', '', 'string');
-		$this->setState('filter.enabled', ($enabled === '') ? $enabled : (int) $enabled);
-
-		$autoReply = $app->getUserStateFromRequest($this->context . 'filter.autoreply', 'filter_autoreply', '', 'string');
-		$this->setState('filter.autoreply', ($autoReply === '') ? $autoReply : (int) $autoReply);
-
-		$access = $app->getUserStateFromRequest($this->context . 'filter.access', 'filter_access', '', 'string');
-		$this->setState('filter.access', ($access === '') ? $access : (int) $access);
-
-		$language = $app->getUserStateFromRequest($this->context . 'filter.language', 'filter_language', '', 'string');
-		$this->setState('filter.language', $language);
-
 		parent::populateState($ordering, $direction);
 	}
 
 	protected function getStoreId($id = '')
 	{
 		// Compile the store id.
-		$id .= ':' . $this->getState('filter.search');
-		$id .= ':' . $this->getState('filter.enabled');
-		$id .= ':' . $this->getState('filter.autoreply');
-		$id .= ':' . $this->getState('filter.language');
+		$id .= ':' . serialize($this->getState('filter.search'));
+		$id .= ':' . serialize($this->getState('filter.enabled'));
+		$id .= ':' . serialize($this->getState('filter.autoreply'));
+		$id .= ':' . serialize($this->getState('filter.language'));
 		$id .= ':' . serialize($this->getState('filter.access'));
 
 		return parent::getStoreId($id);
@@ -91,7 +77,7 @@ class CategoriesModel extends ListModel
 		// Search filter
 		$search = $this->getState('filter.search');
 
-		if (!empty($search))
+		if (!empty($search) && is_string($search))
 		{
 			if (stripos($search, 'id:') === 0)
 			{
@@ -101,7 +87,7 @@ class CategoriesModel extends ListModel
 			}
 			else
 			{
-				$search = '%' . $search . '%';
+				$search = '%' . $db->escape($search, true) . '%';
 				$query->where(
 					'(' .
 					$db->qn('title') . ' LIKE :search1' . ' OR ' .
@@ -118,8 +104,9 @@ class CategoriesModel extends ListModel
 
 		if (is_numeric($enabled))
 		{
+			$enabled = (int) $enabled;
 			$query->where($db->quoteName('enabled') . ' = :enabled')
-				->bind(':enabled', $enabled);
+				->bind(':enabled', $enabled, ParameterType::INTEGER);
 		}
 
 		// Auto-reply filter
@@ -127,8 +114,9 @@ class CategoriesModel extends ListModel
 
 		if (is_numeric($autoReply))
 		{
-			$query->where($db->quoteName('autoreply') . ' = :autoreply')
-				->bind(':autoreply', $autoReply);
+			$autoReply = (int) $autoReply;
+			$query->where($db->quoteName('sendautoreply') . ' = :autoreply')
+				->bind(':autoreply', $autoReply, ParameterType::INTEGER);
 		}
 
 		// Access filter
@@ -136,8 +124,9 @@ class CategoriesModel extends ListModel
 
 		if (is_numeric($access))
 		{
+			$access = (int) $access;
 			$query->where($db->quoteName('access') . ' = :access')
-				->bind(':access', $access);
+				->bind(':access', $access, ParameterType::INTEGER);
 		}
 		elseif (is_array($access))
 		{
@@ -148,9 +137,9 @@ class CategoriesModel extends ListModel
 		// Language filter
 		$language = $this->getState('filter.language');
 
-		if (!empty($language))
+		if (!empty($language) && is_string($language))
 		{
-			$query->where($db->quoteName('language') . ' = :language')
+			$query->where($db->quoteName('c.language') . ' = :language')
 				->bind(':language', $language);
 		}
 

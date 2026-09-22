@@ -15,6 +15,7 @@ ContactUs 4.3.0
 # [MEDIUM] Refused contact form submissions resulted in an HTTP 404 error page
 # [LOW] The version compatibility error disclosed exact PHP and Joomla versions on public pages
 # [LOW] Backend edit forms were readable with inadequate permissions
+# [LOW] Malformed array filter parameters caused persistent HTTP 500 errors in backend lists
 
 ContactUs 4.2.7
 ================================================================================
