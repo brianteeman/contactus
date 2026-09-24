@@ -25,7 +25,7 @@
 		<include name="language/**" />
 		<include name="media/**" />
 
-		<exclude name="frontend/CLAUDE.md" />
+		<exclude name="frontend/AGENTS.md" />
 		<exclude name="backend/contactus.xml" />
 
 		<include name="LICENSE.txt" />
